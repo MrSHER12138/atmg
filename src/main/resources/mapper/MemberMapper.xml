@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sher.atmg.mapper.MemberMapper">
+
+  <resultMap id="memberMap" type="com.sher.atmg.result.MemberWorksResult">
+        <id property="memberId" column="member_id"/>
+        <result property="name" column="name"/>
+        <result property="type" column="type"/>
+        <result property="photo" column="photo"/>
+        <result property="sort" column="sort"/>
+        <result property="worksId" column="works_id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="cover" column="cover"/>
+  </resultMap>
+
+    <select id="getMemberWorks" resultMap="memberMap">
+        select
+            tm.member_id,
+            tm.name,
+            tm.photo,
+            tw.works_id,
+            tw.title,
+            tw.content,
+            tw.cover
+        from t_member tm
+        left join t_works_member twm on twm.member_id = tm.member_id
+        left join t_works tw on tw.works_id = twm.works_id and tw.del_flag != "1"
+        where tm.member_id = #{memberId}
+            and tm.del_flag != "1"
+        order by tm.sort
+    </select>
+</mapper>
